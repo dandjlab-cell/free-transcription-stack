@@ -4,50 +4,57 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Free Transcription Stack</title>
+<meta name="description" content="Four free tools wired in the right order, tested head to head against Gemini 3.5 Transcribe. Read it here or download the PDF.">
 <meta property="og:title" content="Free Transcription Stack">
 <meta property="og:description" content="Four free tools wired in the right order, tested head to head against Gemini 3.5 Transcribe. The exact spec, ready to hand to Claude or Codex.">
-<meta property="og:image" content="cover.jpg">
+<meta property="og:image" content="https://dandjlab-cell.github.io/free-transcription-stack/cover.jpg">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600&family=Courier+Prime&display=swap">
 <style>
   :root { --paper:#FEFAE0; --ink:#333826; --mut:#7E8263; --red:#9A5F2B; --beige:#E9EDC9; }
-  html,body { margin:0; background:var(--paper); color:var(--ink); font-family:'Libre Franklin',Helvetica,Arial,sans-serif; }
-  main { max-width:680px; margin:0 auto; padding:64px 24px 96px; }
-  .cover { width:100%; height:auto; display:block; filter:sepia(0.16) saturate(1.06); }
-  h1 { font-size:28px; font-weight:500; letter-spacing:-0.01em; margin:40px 0 8px; }
-  h1 span { color:var(--red); }
+  html,body { margin:0; overflow-x:hidden; background:var(--paper); color:var(--ink); font-family:'Libre Franklin',Helvetica,Arial,sans-serif; }
+  main { max-width:720px; margin:0 auto; padding:40px 20px 80px; box-sizing:border-box; width:100%; }
   .lab { font-family:'Courier Prime','Courier New',monospace; font-size:11px; letter-spacing:0.12em; color:var(--mut); }
-  p { font-size:16px; line-height:1.6; max-width:560px; }
-  .btn { display:inline-block; margin-top:28px; padding:14px 22px; border:1px solid var(--ink); color:var(--ink); text-decoration:none; font-weight:600; font-size:15px; }
-  .btn:hover { background:var(--beige); }
-  .rows { margin-top:56px; border-top:1px solid var(--ink); }
-  .r { display:flex; gap:18px; align-items:baseline; padding:14px 0; border-bottom:0.5px solid rgba(51,56,38,0.22); }
-  .r u { text-decoration:none; font-family:'Courier Prime','Courier New',monospace; font-size:13px; color:var(--red); flex:0 0 32px; }
-  .r b { font-size:18px; font-weight:600; flex:0 0 120px; }
-  .r span { font-size:14px; color:var(--mut); }
-  .foot { margin-top:56px; font-family:'Courier Prime','Courier New',monospace; font-size:11px; letter-spacing:0.1em; color:var(--mut); }
+  h1 { font-size:26px; font-weight:500; letter-spacing:-0.01em; margin:10px 0 14px; line-height:1.2; }
+  h1 a { color:var(--ink); text-decoration:none; border-bottom:1.5px solid var(--red); }
+  h1 a:hover { color:var(--red); }
+  p { font-size:16px; line-height:1.6; max-width:560px; margin:0; overflow-wrap:anywhere; }
+  .actions { display:flex; gap:12px; flex-wrap:wrap; margin:24px 0 8px; }
+  .btn { display:inline-block; padding:14px 20px; border:1px solid var(--ink); color:var(--ink); text-decoration:none; font-weight:600; font-size:15px; background:transparent; }
+  .btn.primary { background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  .btn:hover { background:var(--beige); color:var(--ink); }
+  .hint { font-family:'Courier Prime','Courier New',monospace; font-size:11px; letter-spacing:0.04em; color:var(--mut); margin-top:10px; line-height:1.6; }
+  .pages { margin-top:40px; display:flex; flex-direction:column; gap:18px; }
+  .pages img { width:100%; height:auto; display:block; border:0.5px solid rgba(51,56,38,0.18); }
+  .pages .n { font-family:'Courier Prime','Courier New',monospace; font-size:10px; letter-spacing:0.12em; color:var(--mut); margin-top:6px; text-align:right; }
+  .foot { margin-top:48px; font-family:'Courier Prime','Courier New',monospace; font-size:11px; letter-spacing:0.08em; color:var(--mut); line-height:1.9; }
   a { color:var(--red); }
-  @media (max-width:480px) { .r b { flex-basis:96px; font-size:16px; } }
 </style>
 </head>
 <body>
 <main>
-  <img class="cover" src="cover.jpg" alt="A 1960s telecopier printing a fax that reads Free Transcription Stack">
-  <div class="lab" style="margin-top:32px;">FREE TOOLS, WIRED IN THE RIGHT ORDER</div>
-  <h1>the free transcription stack<span>.</span></h1>
-  <p>Four open-source tools on one rented GPU, tested on the same audio against Gemini 3.5 Transcribe. Cost 39% less, gave the same answer three times out of three, and never lost nine minutes of speech. Five pages: what it is, the numbers, and the exact spec you can hand to Claude or Codex.</p>
-  <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap; margin-top:28px;">
-    <a class="btn" style="margin-top:0;" href="Free_Transcription_Stack.pdf" download="Free_Transcription_Stack.pdf">Download the PDF</a>
-    <a href="Free_Transcription_Stack.pdf" style="font-size:14px;">or read it in the browser</a>
+  <div class="lab">FREE TOOLS, WIRED IN THE RIGHT ORDER</div>
+  <h1><a href="Free_Transcription_Stack.pdf">Free Transcription Stack</a></h1>
+  <p>Four open-source tools on one rented GPU, tested on the same audio against Gemini 3.5 Transcribe. It cost 39% less, gave the same answer three times out of three, and never lost nine minutes of speech. Read it right here, or take the PDF.</p>
+
+  <div class="actions">
+    <a class="btn primary" href="Free_Transcription_Stack.pdf" download="Free_Transcription_Stack.pdf">Download the PDF</a>
+    <a class="btn" href="#pages">Read it here</a>
   </div>
-  <div class="lab" style="margin-top:14px; letter-spacing:0.06em;">opened from instagram? tap the three dots, then open in browser, then share to save it</div>
-  <div class="rows">
-    <div class="r"><u>01</u><b>ffmpeg</b><span>clean the audio</span></div>
-    <div class="r"><u>02</u><b>whisper</b><span>the words and the timing</span></div>
-    <div class="r"><u>03</u><b>pyannote</b><span>who speaks when</span></div>
-    <div class="r"><u>04</u><b>numpy</b><span>pause, energy, pitch and pacing for every word</span></div>
-    <div class="r"><u>05</u><b>modal</b><span>one rented gpu runs it all</span></div>
+  <div class="hint">opened this from instagram? to save the pdf, tap the three dots, open in browser, then share.<br>the same spec as text, for pasting into claude or codex: <a href="https://github.com/dandjlab-cell/free-transcription-stack#readme">README</a></div>
+
+  <div class="pages" id="pages">
+    <div><img src="pages/page-1.jpg" alt="Cover: a 1960s telecopier printing a fax that reads Free Transcription Stack" loading="eager"><div class="n">1 / 5</div></div>
+    <div><img src="pages/page-2.jpg" alt="Page 2: the five tools, the test, and what came back" loading="lazy"><div class="n">2 / 5</div></div>
+    <div><img src="pages/page-3.jpg" alt="Page 3: full head to head table against Gemini 3.5 Transcribe" loading="lazy"><div class="n">3 / 5</div></div>
+    <div><img src="pages/page-4.jpg" alt="Page 4: the pinned runtime and order of operations to hand to Claude or Codex" loading="lazy"><div class="n">4 / 5</div></div>
+    <div><img src="pages/page-5.jpg" alt="Page 5: the checks that prove the build is right, and the never list" loading="lazy"><div class="n">5 / 5</div></div>
   </div>
-  <div class="foot">the full spec is in the <a href="https://github.com/dandjlab-cell/free-transcription-stack#readme">README</a> · <a href="https://www.instagram.com/dandjlab">@dandjlab</a></div>
+
+  <div class="actions" style="margin-top:32px;">
+    <a class="btn primary" href="Free_Transcription_Stack.pdf" download="Free_Transcription_Stack.pdf">Download the PDF</a>
+  </div>
+
+  <div class="foot">made by <a href="https://www.instagram.com/dandjlab">@dandjlab</a><br>not affiliated with google, modal, systran, or pyannote. source audio is private and not included.</div>
 </main>
 </body>
 </html>

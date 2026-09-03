@@ -1,4 +1,4 @@
-# Free Transcription Stack
+# [Free Transcription Stack](https://dandjlab-cell.github.io/free-transcription-stack/)
 
 Four free, open-source tools wired in the right order, run on one rented GPU. Tested head to head against Gemini 3.5 Transcribe on the same 103.97 minutes of audio, three trials per configuration.
 
