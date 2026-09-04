@@ -8,7 +8,7 @@ Four free, open-source tools wired in the right order, run on one rented GPU. Te
 
 | | tool | job |
 |---|---|---|
-| 01 | **ffmpeg** | clean the audio, mono PCM16 WAV, 16 kHz |
+| 01 | **ffmpeg** | clean the audio (mono PCM16 WAV, 16 kHz), then find the pauses (silencedetect) |
 | 02 | **whisper** | the words and the timing, faster-whisper 1.2.1, large-v3 pinned |
 | 03 | **pyannote** | who speaks when, pyannote.audio 4.0.7, community-1 |
 | 04 | **numpy** | pause, energy, pitch and pacing for every word, measured inside the frozen word boundaries |
@@ -50,6 +50,7 @@ Cost figures use measured runtime and published rates, not invoices. No accuracy
 |---|---|---|
 | environment | Debian / Python 3.11 | CUDA 12 / cuDNN 9 |
 | audio | ffmpeg | mono PCM16 WAV / 16 kHz |
+| pauses | ffmpeg silencedetect | `noise=-35dB`, `d=0.25`, written beside `words.json`, never into it |
 | package | faster-whisper | 1.2.1 |
 | backend | CTranslate2 | 4.8.1 |
 | model | Systran/faster-whisper-large-v3 | rev `53ecf83a5bedc5597eb8c8b34eac29e5345520ff` |
@@ -67,14 +68,51 @@ Cost figures use measured runtime and published rates, not invoices. No accuracy
 ### Order of operations
 
 1. **normalize.** ffmpeg to mono 16 kHz. The original file is never rewritten.
-2. **transcribe.** one model in memory, four clips at once, settings above.
-3. **freeze.** write word, start, end to disk and never edit them again.
-4. **assemble.** every clip into one lane, 2 s of silence between, keep the offset map.
-5. **diarize.** one speaker pass over that lane, then map turns back to clip time.
-6. **assign.** each word takes the speaker with the greatest positive overlap.
-7. **measure.** one prosody row per word: pause, duration, energy, voicing, pitch and slope.
-8. **confirm.** a human names the speakers.
-9. **publish.** hash the output, then write the transcript.
+2. **transcribe.** One model in memory, four clips at once, settings above.
+3. **freeze.** Write word, start, end to disk and never edit them again.
+4. **pauses.** ffmpeg silencedetect over the same audio, written to its own file. See "The pauses" below.
+5. **assemble.** Every clip into one lane, 2 s of silence between, keep the offset map.
+6. **diarize.** One speaker pass over that lane, then map turns back to clip time.
+7. **assign.** Each word takes the speaker with the greatest positive overlap.
+8. **measure.** One prosody row per word: pause, duration, energy, voicing, pitch and slope.
+9. **confirm.** A human names the speakers.
+10. **publish.** Hash the output, then write the transcript.
+
+### The pauses
+
+VAD off keeps every word. The side effect: Whisper glues each pause onto a neighbouring word, so the timestamps carry no silence. A cut that starts on one of those words plays dead air before anyone speaks.
+
+Measured on one 17.6-minute clip (lav mic, quiet room), silences of 0.4 s or longer in the audio: **289**.
+
+| where the pause went in `words.json` | count |
+|---|---|
+| marked as a real gap between words | 124 |
+| glued to the start of the next word, so that word is stamped early (median 0.6 s, worst 3.9 s) | 76 |
+| glued to the end of the previous word, so that word ends late | 70 |
+| unclear or mid-word | 19 |
+
+One representative minute had 17 audible pauses and 0 gaps in the timestamps across 198 words.
+
+**The fix: measure, do not filter.** Do not rewrite Whisper's word times. Run one more pass over the same audio and write the silences beside the words as their own file. One command, about a second per clip:
+
+```
+ffmpeg -i clip.mov -vn -af "silencedetect=noise=-35dB:d=0.25" -f null -
+```
+
+Parse the `silence_start` / `silence_end` lines from stderr into:
+
+```json
+{
+  "method": "ffmpeg-silencedetect-v1",
+  "noise_db": -35.0,
+  "min_silence_s": 0.25,
+  "silences": [[541.29, 542.22], [543.07, 543.35], [550.25, 551.91]]
+}
+```
+
+A floor of -35 dB and a minimum of 0.25 s caught every audible pause in a quiet room. A noisy location needs a higher floor, so keep both as settings and write the values used into the file. An energy threshold over decoded audio is bit-identical across workers; a speech detector is a classifier, which is the same reason VAD is off.
+
+**What the cut does with it.** If a cut's in-point lands inside a silence, move it to the end of that silence. If the out-point lands inside one, move it to the start. Cap the move at 4 s, record the delta, and never touch the word indices. On ten clips: 2,458 silences found in 7.4 s, scanned twice with identical output, 41 of 64 cut-ins moved by a median 0.59 s, and 26 of 28 cut-ins now start on a real pause.
 
 ### If the build is right, these are true
 
@@ -92,6 +130,7 @@ Cost figures use measured runtime and published rates, not invoices. No accuracy
 - **Speaker IDs per clip.** Speaker 1 in clip 3 is not speaker 1 in clip 7.
 - **A model naming people.** Diarization hears voices, not identities.
 - **Fuzzy text to time.** Use the timestamps you froze.
+- **Editing word times to add pauses.** Measure the silence in its own file and snap to it. The words stay raw.
 
 ## Running it
 
